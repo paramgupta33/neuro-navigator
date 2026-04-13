@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --soil: #0f0a06;
+  --wood: #1c140d;
+  --wood-border: #3d2914;
+  --grass: #84cc16;
+  --wheat: #fbbf24;
+  --parchment: #fef3c7;
+  --glass: rgba(28, 20, 13, 0.8);
+  --glass-border: rgba(254, 243, 199, 0.1);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--soil);
+  color: var(--parchment);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Refined page background */
+.cozy-page-bg {
+  background-color: var(--soil);
+  background-image: 
+    radial-gradient(circle at 2px 2px, rgba(251, 191, 36, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Professional Card */
+.cozy-card {
+  background: var(--wood);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+/* Modern Button */
+.cozy-pixel-btn {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.cozy-pixel-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.4);
+}
+
+.cozy-pixel-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cozy-pixel-btn-wheat {
+  background: var(--wheat);
+  color: var(--soil);
+}
+
+/* Refined Nav Tabs */
+.cozy-nav-tab {
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  color: var(--parchment);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.cozy-nav-tab:hover {
+  background: rgba(254, 243, 199, 0.05);
+  color: var(--wheat);
+}
+
+.cozy-nav-tab-active {
+  background: var(--wheat);
+  color: var(--soil);
+  font-weight: 600;
+}
+
+/* Divider */
+.cozy-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--wheat);
+  opacity: 0.4;
+  margin: 1.5rem 0;
+}
+
+.cozy-divider::before,
+.cozy-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+}
+
+/* Map Frame */
+.map-cozy-frame {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Pin Glow */
+.user-glow-dot {
+  width: 16px;
+  height: 16px;
+  background: var(--grass);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 20px var(--grass);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(132, 204, 22, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(132, 204, 22, 0); }
+}
+
+/* Signpost Modernized */
+.report-signpost-board {
+  background: var(--wood);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.report-signpost-post {
+  width: 4px;
+  background: var(--wood-border);
+  height: 2rem;
+}
+
+/* Form Inputs */
+input, textarea, select {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 10px !important;
+  padding: 0.75rem 1rem !important;
+  color: var(--parchment) !important;
+  transition: all 0.2s ease !important;
+  font-size: 1rem !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--wheat) !important;
+  outline: none !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1) !important;
+}
+
+/* Success Banner */
+.golden-scroll-banner {
+  background: var(--wheat);
+  color: var(--soil);
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 1rem;
+  box-shadow: 0 10px 20px -5px rgba(251, 191, 36, 0.3);
+}

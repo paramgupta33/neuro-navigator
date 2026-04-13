@@ -1,0 +1,7 @@
+{
+  "name": "Remix: NeuroNav",
+  "description": "An interactive sensory map and community board for neurodivergent urban navigation in Mumbai.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
