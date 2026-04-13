@@ -1,25 +1,15 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+import { initializeApp } from "firebase/app"
+import { getAuth } from "firebase/auth"
+import { getFirestore } from "firebase/firestore"
 
-let app;
-let db;
-let auth;
-
-try {
-  // Check if config is valid (not placeholders)
-  if (!firebaseConfig.projectId || firebaseConfig.projectId.includes('remixed')) {
-    console.warn("Firebase is not yet configured. Please complete the Firebase setup.");
-  }
-  
-  app = initializeApp(firebaseConfig);
-  db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-  auth = getAuth(app);
-} catch (error) {
-  console.error("Firebase initialization failed:", error);
-  // Provide mock/null objects to prevent immediate crashes, 
-  // though the app will likely need real ones to function.
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-export { db, auth };
+const app = initializeApp(firebaseConfig)
+
+export const auth = getAuth(app)
+export const db = getFirestore(app)
