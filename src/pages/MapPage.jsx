@@ -205,6 +205,7 @@ function tryParseRecommendationJson(text) {
 export default function MapPage() {
   const [locations, setLocations] = useState([])
   const [loadingLocations, setLoadingLocations] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loadingFilters, setLoadingFilters] = useState(false)
 
   const [filterSound, setFilterSound] = useState(null)
@@ -527,7 +528,32 @@ Pick exactly ONE location from the locations list by matching its "name" field (
 
   return (
     <div className="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
-      <aside className="absolute left-0 top-0 z-[1000] flex h-full w-[min(100%,20rem)] flex-col border-r border-white/5 bg-[#1a1108]/95 backdrop-blur-xl shadow-2xl">
+
+  <button
+    onClick={() => setSidebarOpen(true)}
+    className="md:hidden fixed top-20 left-4 z-[3000] rounded-xl bg-[#1a1108]/90 px-3 py-2 text-white shadow-lg"
+  >
+    ☰
+  </button>
+      <aside
+  className={`
+    fixed md:absolute top-0 left-0 z-[2000]
+    h-full w-[85%] max-w-sm
+    flex flex-col
+    border-r border-white/5 bg-[#1a1108]/95 backdrop-blur-xl shadow-2xl
+    transition-transform duration-300
+
+    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+    md:translate-x-0
+  `}
+><div className="md:hidden flex justify-end p-3">
+  <button
+    onClick={() => setSidebarOpen(false)}
+    className="text-white/60 text-lg"
+  >
+    ✕
+  </button>
+</div>
         <div className="flex flex-col gap-6 p-6 overflow-y-auto">
           <div className="space-y-4">
             <button
@@ -653,8 +679,14 @@ Pick exactly ONE location from the locations list by matching its "name" field (
           )}
         </div>
       </aside>
+{sidebarOpen && (
+  <div
+    className="fixed inset-0 bg-black/40 z-[1500] md:hidden"
+    onClick={() => setSidebarOpen(false)}
+  />
+)}
 
-      <div className="h-full w-full">
+      <div className="h-full w-full md:pl-[20rem]">
         <MapContainer
           center={MUMBAI_CENTER}
           zoom={MUMBAI_ZOOM}
