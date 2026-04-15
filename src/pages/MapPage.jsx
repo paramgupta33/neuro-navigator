@@ -520,7 +520,9 @@ Pick exactly ONE location from the locations list by matching its "name" field (
       }
       setRecData(parsed)
     } catch (e) {
-      setRecError(e instanceof Error ? e.message : 'Something went wrong.')
+      setRecError(
+  "AI is currently busy 🌿 Try again in a bit or explore nearby calm places."
+);
     } finally {
       setRecLoading(false)
     }

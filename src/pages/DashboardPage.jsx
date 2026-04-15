@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { haversineKm } from '../lib/geo';
 import { supabase } from '../lib/supabase'
 import { getOrCreateAnonUserId } from '../lib/anonUser'
 import {
@@ -295,6 +296,7 @@ function LocationCard({
 }
 
 export default function DashboardPage() {
+  const [userCoords, setUserCoords] = useState(null);
   const [locations, setLocations] = useState([])
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
@@ -353,9 +355,25 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      setUserCoords({
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude
+      });
+    },
+    () => {
+      console.log("Location permission denied");
+    }
+  );
+}, []);
+
+  useEffect(() => {
+    
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load()
   }, [load])
+
 
   const handleConfirm = useCallback(
     async (latest) => {
@@ -431,8 +449,8 @@ export default function DashboardPage() {
   }, [locations, reportsByLocation])
 
   const calmSpots = useMemo(
-    () => enriched.filter((e) => isCurrentlyCalm(e.reports)),
-    [enriched],
+    () => sortedNearby.filter((e) => isCurrentlyCalm(e.reports)),
+    [sortedNearby],
   )
 
   const trendData = useMemo(() => {
@@ -460,7 +478,23 @@ export default function DashboardPage() {
       score: h.reports.length > 0 ? atmosphereScore(h.reports) : null
     })).filter(d => d.score !== null)
   }, [reports])
+const nearbyLocations = userCoords
+  ? enriched.filter((e) =>
+      haversineKm(
+        userCoords.lat,
+        userCoords.lng,
+        e.location.lat,
+        e.location.lng
+      ) <= 5
+    )
+  : enriched;
 
+const sortedNearby = userCoords
+  ? [...nearbyLocations].sort((a, b) =>
+      haversineKm(userCoords.lat, userCoords.lng, a.location.lat, a.location.lng) -
+      haversineKm(userCoords.lat, userCoords.lng, b.location.lat, b.location.lng)
+    )
+  : nearbyLocations;
   return (
     <div className="cozy-page-bg min-h-[calc(100vh-4rem)] px-4 py-12">
       <div className="mx-auto max-w-6xl">
@@ -500,7 +534,7 @@ export default function DashboardPage() {
                   <ShieldCheck className="text-wheat" size={20} />
                   <h3 className="text-sm font-bold uppercase tracking-widest text-wheat/80">Verified Spots</h3>
                 </div>
-                <p className="text-2xl font-bold text-white">{enriched.filter(e => e.latest?.confirmed_by > 0).length}</p>
+                <p className="text-2xl font-bold text-white">{sortedNearby.filter(e => e.latest?.confirmed_by > 0).length}</p>
                 <p className="text-xs text-white/40 mt-1">Locations with confirmations</p>
               </div>
               <div className="rounded-3xl bg-black/20 p-6 border border-white/5">
@@ -527,13 +561,13 @@ export default function DashboardPage() {
                 </div>
               </div>
               
-              {enriched.filter(e => e.latest?.crowd_level === 'crowded' || e.latest?.sound_level === 'loud' || e.latest?.sound_level === 'sudden-noises').length === 0 ? (
+              {sortedNearby.filter(e => e.latest?.crowd_level === 'crowded' || e.latest?.sound_level === 'loud' || e.latest?.sound_level === 'sudden-noises').length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-white/10 p-8 text-center bg-grass/5">
                   <p className="text-grass/60 italic">All clear! No high-intensity reports in the last few hours. 🌿</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">
-                  {enriched
+                  {sortedNearby
                     .filter(e => e.latest?.crowd_level === 'crowded' || e.latest?.sound_level === 'loud' || e.latest?.sound_level === 'sudden-noises')
                     .map((e) => (
                       <div key={e.location.id} className="flex items-center justify-between rounded-2xl bg-red-500/5 p-4 border border-red-500/10">
@@ -597,13 +631,13 @@ export default function DashboardPage() {
                 </h2>
               </div>
               
-              {enriched.length === 0 ? (
+              {sortedNearby.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-white/10 p-12 text-center">
                   <p className="text-white/40 italic">No locations yet... be the first villager! 🌱</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {enriched.map((e) => (
+                  {sortedNearby.map((e) => (
                     <LocationCard
                       key={e.location.id}
                       location={e.location}
