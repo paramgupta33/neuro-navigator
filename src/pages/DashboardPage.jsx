@@ -448,10 +448,6 @@ export default function DashboardPage() {
     })
   }, [locations, reportsByLocation])
 
-  const calmSpots = useMemo(
-    () => sortedNearby.filter((e) => isCurrentlyCalm(e.reports)),
-    [sortedNearby],
-  )
 
   const trendData = useMemo(() => {
     if (!reports || reports.length === 0) return []
@@ -478,6 +474,7 @@ export default function DashboardPage() {
       score: h.reports.length > 0 ? atmosphereScore(h.reports) : null
     })).filter(d => d.score !== null)
   }, [reports])
+
 const nearbyLocations = userCoords
   ? enriched.filter((e) =>
       haversineKm(
@@ -495,6 +492,11 @@ const sortedNearby = userCoords
       haversineKm(userCoords.lat, userCoords.lng, b.location.lat, b.location.lng)
     )
   : nearbyLocations;
+
+const calmSpots = useMemo(
+  () => sortedNearby.filter((e) => isCurrentlyCalm(e.reports)),
+  [sortedNearby]
+);
   return (
     <div className="cozy-page-bg min-h-[calc(100vh-4rem)] px-4 py-12">
       <div className="mx-auto max-w-6xl">
